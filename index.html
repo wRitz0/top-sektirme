@@ -203,8 +203,13 @@ document.addEventListener("touchmove",e=>{
 function drawBall(){
   ctx.beginPath();
   ctx.arc(x,y,ballRadius,0,Math.PI*2);
-  ctx.fillStyle="#f1c40f"; ctx.fill(); ctx.closePath();
+  ctx.fillStyle="#f1c40f"; // top rengi
+  ctx.shadowColor="#f1c40f"; // glow rengi, top ile aynı
+  ctx.shadowBlur=12; // glow yoğunluğu
+  ctx.fill();
+  ctx.closePath();
 }
+
 function drawPaddle(){
   ctx.beginPath();
   ctx.rect(paddleX,canvas.height-paddleHeight-5,paddleWidth,paddleHeight);
