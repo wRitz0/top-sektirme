@@ -5,103 +5,84 @@
 <title>Top Sektirme Oyunu</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 body, html {
   font-family: 'Montserrat', sans-serif;
-  overflow: hidden;
-  height: 100vh; width: 100vw;
-  display: flex; justify-content: center; align-items: center;
+  overflow:hidden;
+  height:100vh; width:100vw;
+  display:flex; justify-content:center; align-items:center;
   background: radial-gradient(circle at center, #111 0%, #000 100%);
-  color: white;
+  color:white;
 }
-canvas { background: rgba(255,255,255,0.02); border-radius: 12px; box-shadow: 0 0 25px rgba(0,0,0,0.8); z-index: 2; }
+canvas { background: rgba(255,255,255,0.02); border-radius:12px; box-shadow:0 0 25px rgba(0,0,0,0.8); z-index:2; }
 
-/* Menü ve overlay stilleri */
+/* Menü ve overlay */
 .menu, .overlay {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  display: flex; justify-content: center; align-items: center;
+  position:absolute; top:0; left:0; width:100vw; height:100vh;
+  display:flex; justify-content:center; align-items:center;
   background: rgba(0,0,0,0.75);
-  flex-direction: column;
-  animation: fadeIn 0.5s ease forwards;
-  z-index: 3;
+  flex-direction:column;
+  animation: fadeIn 0.5s ease forwards; z-index:3;
 }
 .menu-content, .overlay-content {
   background: rgba(20,20,20,0.85);
   backdrop-filter: blur(12px);
-  padding: 35px 55px;
-  border-radius: 16px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.6);
-  text-align: center;
-  animation: scaleIn 0.5s ease forwards;
+  padding:35px 55px; border-radius:16px;
+  box-shadow:0 0 25px rgba(0,0,0,0.6);
+  text-align:center; animation: scaleIn 0.5s ease forwards;
 }
-h1 { font-size: 42px; margin-bottom: 20px; letter-spacing: 2px; }
+h1 { font-size:42px; margin-bottom:20px; letter-spacing:2px; }
 .btn {
-  margin: 12px;
-  padding: 12px 28px;
-  font-size: 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
+  margin:12px; padding:12px 28px; font-size:20px;
+  border:none; border-radius:10px; cursor:pointer;
+  font-family:'Montserrat',sans-serif; font-weight:bold;
   transition: transform 0.2s, background 0.3s;
 }
 .btn:hover { transform: scale(1.07); }
-.easy { background: #27ae60; color: white; }
-.medium { background: #f39c12; color: white; }
-.hard { background: #e74c3c; color: white; }
-.restart { background: #3498db; color: white; }
+.easy { background:#27ae60; color:white; }
+.medium { background:#f39c12; color:white; }
+.hard { background:#e74c3c; color:white; }
+.restart { background:#3498db; color:white; }
 
 /* Animasyonlar */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes scaleIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes fadeIn { from {opacity:0;} to{opacity:1;} }
+@keyframes scaleIn { from{transform:scale(0.7);opacity:0;} to{transform:scale(1);opacity:1;} }
 
 /* Skor */
 .score {
-  position: absolute;
-  top: 25px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 48px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.3);
-  z-index: 2;
-  user-select: none;
+  position:absolute; top:25px; left:50%;
+  transform:translateX(-50%);
+  font-size:48px; font-weight:700; color:rgba(255,255,255,0.3);
+  z-index:2; user-select:none;
 }
 
 /* Arka plan parçacıkları */
-#bgCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+#bgCanvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
 
 /* 3-2-1 Sayacı */
 #countdown {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 120px;
-  font-weight: bold;
-  color: #f1c40f;
-  z-index: 4;
-  pointer-events: none;
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-size:120px; font-weight:bold;
+  color:#f1c40f; z-index:4; pointer-events:none;
 }
 
-/* Responsive mobil */
-@media (max-width: 768px) {
-  body, html { width: 100vw; height: 100vh; }
-  canvas#gameCanvas { width: 100vw !important; height: 100vh !important; display: block; margin: 0 auto; }
-  .menu, .overlay { width: 100vw; height: 100vh; padding: 20px; }
-  .menu-content, .overlay-content { width: 90%; padding: 25px; font-size: 18px; }
-  .btn { width: 80%; padding: 14px 0; font-size: 18px; }
-  .score { top: 15px; font-size: 36px; }
+/* Responsive mobil dikey */
+@media (max-width:768px){
+  body, html { width:100vw; height:100vh; overflow:hidden; }
+  canvas#gameCanvas { width:100vw !important; height:100vh !important; display:block; margin:0 auto; }
+  .menu, .overlay { width:100vw; height:100vh; padding:20px; }
+  .menu-content, .overlay-content { width:95%; padding:25px; font-size:18px; }
+  .btn { width:90%; padding:14px 0; font-size:18px; }
+  .score { top:15px; font-size:36px; }
+  #countdown { font-size:100px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Arka plan parçacıkları -->
 <canvas id="bgCanvas"></canvas>
 
-<!-- Menü -->
 <div class="menu" id="startMenu">
   <div class="menu-content">
     <h1>Top Sektirme</h1>
@@ -112,13 +93,11 @@ h1 { font-size: 42px; margin-bottom: 20px; letter-spacing: 2px; }
   </div>
 </div>
 
-<!-- Oyun -->
 <canvas id="gameCanvas"></canvas>
 <div class="score" id="score">0</div>
 <div id="countdown"></div>
 
-<!-- Game Over -->
-<div class="overlay" id="gameOverMenu" style="display: none;">
+<div class="overlay" id="gameOverMenu" style="display:none;">
   <div class="overlay-content">
     <h1>Kaybettin 😢</h1>
     <p id="finalScore"></p>
@@ -127,188 +106,73 @@ h1 { font-size: 42px; margin-bottom: 20px; letter-spacing: 2px; }
 </div>
 
 <script>
-/* ==== Arka Plan Parçacıkları ==== */
-const bgCanvas = document.getElementById("bgCanvas");
-const bgCtx = bgCanvas.getContext("2d");
-bgCanvas.width = window.innerWidth;
-bgCanvas.height = window.innerHeight;
-
-let particles = [];
-for (let i = 0; i < 80; i++) {
-  particles.push({ x: Math.random()*bgCanvas.width, y: Math.random()*bgCanvas.height, r: Math.random()*2+1, dx: (Math.random()-0.5)*0.5, dy: (Math.random()-0.5)*0.5 });
-}
-function drawParticles() {
-  bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
-  bgCtx.fillStyle = "rgba(255,255,255,0.3)";
-  particles.forEach(p=>{
-    bgCtx.beginPath();
-    bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    bgCtx.fill();
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x<0||p.x>bgCanvas.width) p.dx*=-1;
-    if(p.y<0||p.y>bgCanvas.height) p.dy*=-1;
-  });
-  requestAnimationFrame(drawParticles);
-}
+/* Arka plan parçacıkları */
+const bgCanvas=document.getElementById("bgCanvas"), bgCtx=bgCanvas.getContext("2d");
+bgCanvas.width=window.innerWidth; bgCanvas.height=window.innerHeight;
+let particles=[]; for(let i=0;i<80;i++){particles.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.5});}
+function drawParticles(){bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height); bgCtx.fillStyle="rgba(255,255,255,0.3)";
+particles.forEach(p=>{bgCtx.beginPath(); bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2); bgCtx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>bgCanvas.width)p.dx*=-1; if(p.y<0||p.y>bgCanvas.height)p.dy*=-1;}); requestAnimationFrame(drawParticles);}
 drawParticles();
 
-/* ==== Oyun ==== */
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const scoreElement = document.getElementById("score");
-const startMenu = document.getElementById("startMenu");
-const gameOverMenu = document.getElementById("gameOverMenu");
-const finalScore = document.getElementById("finalScore");
-const countdownEl = document.getElementById("countdown");
+/* Oyun */
+const canvas=document.getElementById("gameCanvas"), ctx=canvas.getContext("2d");
+const scoreElement=document.getElementById("score"), startMenu=document.getElementById("startMenu");
+const gameOverMenu=document.getElementById("gameOverMenu"), finalScore=document.getElementById("finalScore");
+const countdownEl=document.getElementById("countdown");
+let paddleHeight=12,paddleWidth=100, paddleX, ballRadius=10;
+let x,y,dx,dy,score=0,isGameOver=false,difficultySpeed=2,particlesImpact=[];
 
-let paddleHeight = 12, paddleWidth = 100;
-let paddleX, ballRadius = 10;
-let x, y, dx, dy;
-let score = 0;
-let isGameOver = false;
-let difficultySpeed = 2;
-
-let particlesImpact = [];
-
-/* ===== Responsive Canvas ===== */
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  paddleX = (canvas.width - paddleWidth) / 2;
-  x = canvas.width / 2;
-  y = canvas.height - 40;
+/* Responsive canvas */
+function resizeCanvas(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  paddleX=(canvas.width-paddleWidth)/2;
+  x=canvas.width/2;
+  y=canvas.height-80;
 }
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
 
-/* ==== Başlangıç ve 3-2-1 ===== */
+/* Başlangıç ve 3-2-1 */
 function startGame(difficulty){
-  if(difficulty==='easy') difficultySpeed=2;
-  else if(difficulty==='medium') difficultySpeed=3.5;
+  if(difficulty==='easy')difficultySpeed=2;
+  else if(difficulty==='medium')difficultySpeed=3.5;
   else difficultySpeed=5;
-
   startMenu.style.display='none';
-  showCountdown(()=>{ initGame(); draw(); });
+  showCountdown(()=>{initGame(); draw();});
 }
 
 function showCountdown(callback){
   let count=3;
-  countdownEl.style.display='block';
-  countdownEl.textContent=count;
-  let interval = setInterval(()=>{
-    count--;
-    if(count>0) countdownEl.textContent=count;
-    else{
-      clearInterval(interval);
-      countdownEl.style.display='none';
-      callback();
-    }
-  },1000);
+  countdownEl.style.display='block'; countdownEl.textContent=count;
+  let interval=setInterval(()=>{count--; if(count>0)countdownEl.textContent=count; else{clearInterval(interval); countdownEl.style.display='none'; callback();}},1000);
 }
 
-/* ==== Başlat ==== */
-function initGame(){
-  dx=difficultySpeed;
-  dy=-difficultySpeed;
-  paddleX=(canvas.width-paddleWidth)/2;
-  x=canvas.width/2;
-  y=canvas.height-40;
-  score=0;
-  isGameOver=false;
-  scoreElement.textContent="0";
-  gameOverMenu.style.display='none';
+function initGame(){dx=difficultySpeed; dy=-difficultySpeed; paddleX=(canvas.width-paddleWidth)/2; x=canvas.width/2; y=canvas.height-80; score=0; isGameOver=false; scoreElement.textContent="0"; gameOverMenu.style.display='none';}
+
+/* Kontroller */
+document.addEventListener("mousemove",(e)=>{let relX=e.clientX-canvas.getBoundingClientRect().left; if(relX>0&&relX<canvas.width)paddleX=relX-paddleWidth/2;});
+document.addEventListener("touchmove",(e)=>{let touchX=e.touches[0].clientX-canvas.getBoundingClientRect().left; paddleX=touchX-paddleWidth/2;});
+
+/* Paddle & Ball */
+function drawBall(){ctx.beginPath(); ctx.arc(x,y,ballRadius,0,Math.PI*2); ctx.fillStyle="#f1c40f"; ctx.fill(); ctx.closePath();}
+function drawPaddle(){ctx.beginPath(); ctx.rect(paddleX,canvas.height-paddleHeight-5,paddleWidth,paddleHeight); ctx.fillStyle="#2ecc71"; ctx.shadowColor="#2ecc71"; ctx.shadowBlur=12; ctx.fill(); ctx.closePath();}
+
+/* Patlama efekti */
+function addImpactParticles(x,y){for(let i=0;i<20;i++){let angle=Math.random()*Math.PI*2,speed=Math.random()*4+2; particlesImpact.push({x:x,y:y,dx:Math.cos(angle)*speed,dy:Math.sin(angle)*speed,r:Math.random()*4+2,alpha:1});}}
+function drawImpactParticles(){for(let i=particlesImpact.length-1;i>=0;i--){let p=particlesImpact[i]; let grad=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r); grad.addColorStop(0,`rgba(241,196,15,${p.alpha})`); grad.addColorStop(0.5,`rgba(241,196,15,${p.alpha*0.5})`); grad.addColorStop(1,`rgba(241,196,15,0)`); ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=grad; ctx.fill(); ctx.closePath(); p.x+=p.dx; p.y+=p.dy; p.alpha-=0.03; if(p.alpha<=0)particlesImpact.splice(i,1);}}
+
+function draw(){if(isGameOver)return; ctx.clearRect(0,0,canvas.width,canvas.height); drawBall(); drawPaddle(); drawImpactParticles();
+if(x+dx>canvas.width-ballRadius || x+dx<ballRadius) dx=-dx;
+if(y+dy<ballRadius) dy=-dy;
+else if(y+dy>canvas.height-ballRadius){
+  if(x>paddleX && x<paddleX+paddleWidth){dy=-dy; score++; scoreElement.textContent=score; addImpactParticles(x,y);}
+  else gameOver();
 }
+x+=dx; y+=dy; requestAnimationFrame(draw);}
 
-/* ==== Kontroller ==== */
-document.addEventListener("mousemove",(e)=>{
-  let relX = e.clientX - canvas.getBoundingClientRect().left;
-  if(relX>0 && relX<canvas.width) paddleX=relX - paddleWidth/2;
-});
-document.addEventListener("touchmove",(e)=>{
-  let touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
-  paddleX = touchX - paddleWidth/2;
-});
-
-/* ==== Paddle & Ball ==== */
-function drawBall(){
-  ctx.beginPath();
-  ctx.arc(x,y,ballRadius,0,Math.PI*2);
-  ctx.fillStyle="#f1c40f";
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawPaddle(){
-  ctx.beginPath();
-  ctx.rect(paddleX,canvas.height-paddleHeight-5,paddleWidth,paddleHeight);
-  ctx.fillStyle="#2ecc71";
-  ctx.shadowColor="#2ecc71";
-  ctx.shadowBlur=12;
-  ctx.fill();
-  ctx.closePath();
-}
-
-/* ==== Patlama ==== */
-function addImpactParticles(x,y){
-  for(let i=0;i<20;i++){
-    let angle=Math.random()*Math.PI*2;
-    let speed=Math.random()*4+2;
-    particlesImpact.push({x:x,y:y,dx:Math.cos(angle)*speed,dy:Math.sin(angle)*speed,r:Math.random()*4+2,alpha:1});
-  }
-}
-function drawImpactParticles(){
-  for(let i=particlesImpact.length-1;i>=0;i--){
-    let p=particlesImpact[i];
-    let grad=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
-    grad.addColorStop(0,`rgba(241,196,15,${p.alpha})`);
-    grad.addColorStop(0.5,`rgba(241,196,15,${p.alpha*0.5})`);
-    grad.addColorStop(1,`rgba(241,196,15,0)`);
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=grad;
-    ctx.fill();
-    ctx.closePath();
-    p.x+=p.dx; p.y+=p.dy;
-    p.alpha-=0.03;
-    if(p.alpha<=0) particlesImpact.splice(i,1);
-  }
-}
-
-/* ==== Çizim Döngüsü ==== */
-function draw(){
-  if(isGameOver) return;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  drawBall();
-  drawPaddle();
-  drawImpactParticles();
-
-  if(x+dx>canvas.width-ballRadius || x+dx<ballRadius) dx=-dx;
-  if(y+dy<ballRadius) dy=-dy;
-  else if(y+dy>canvas.height-ballRadius){
-    if(x>paddleX && x<paddleX+paddleWidth){
-      dy=-dy;
-      score++;
-      scoreElement.textContent=score;
-      addImpactParticles(x,y);
-    }else gameOver();
-  }
-
-  x+=dx; y+=dy;
-  requestAnimationFrame(draw);
-}
-
-/* ==== Game Over ==== */
-function gameOver(){
-  isGameOver=true;
-  finalScore.textContent="Skorun: "+score;
-  gameOverMenu.style.display='flex';
-}
-
-/* ==== Yeniden Başla ==== */
-function restartGame(){
-  startMenu.style.display='flex';
-  gameOverMenu.style.display='none';
-}
+function gameOver(){isGameOver=true; finalScore.textContent="Skorun: "+score; gameOverMenu.style.display='flex';}
+function restartGame(){startMenu.style.display='flex'; gameOverMenu.style.display='none';}
 </script>
 </body>
 </html>
