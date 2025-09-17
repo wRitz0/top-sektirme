@@ -6,22 +6,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body,html{
+html,body{
   font-family:'Montserrat',sans-serif;
   overflow:hidden;
-  display:flex; justify-content:center; align-items:center;
+  height:100%; width:100%;
   background: radial-gradient(circle at center, #111 0%, #000 100%);
-  color:white; height:100vh; width:100vw;
+  display:flex; justify-content:center; align-items:center;
+  color:white;
 }
 canvas#gameCanvas{
-  width:800px; height:600px;
   background: rgba(255,255,255,0.02);
   border-radius:12px;
   box-shadow:0 0 25px rgba(0,0,0,0.8);
   z-index:2;
 }
 .menu, .overlay{
-  position:absolute; top:0; left:0; width:100vw; height:100vh;
+  position:absolute; top:0; left:0; width:100%; height:100%;
   display:flex; justify-content:center; align-items:center;
   background: rgba(0,0,0,0.75);
   flex-direction:column; animation:fadeIn 0.5s ease forwards;
@@ -44,19 +44,11 @@ h1{font-size:42px; margin-bottom:20px; letter-spacing:2px;}
   transition: transform 0.2s, box-shadow 0.3s;
 }
 
-/* Menü buton hover glow renkleri */
-.btn.easy:hover { 
-  box-shadow: 0 0 15px #27ae60; transform: scale(1.1);
-}
-.btn.medium:hover { 
-  box-shadow: 0 0 15px #f39c12; transform: scale(1.1);
-}
-.btn.hard:hover { 
-  box-shadow: 0 0 15px #e74c3c; transform: scale(1.1);
-}
-.btn.restart:hover {
-  box-shadow: 0 0 15px #3498db; transform: scale(1.1);
-}
+/* Menü hover glow renkleri */
+.btn.easy:hover { box-shadow: 0 0 15px #27ae60; transform: scale(1.1);}
+.btn.medium:hover { box-shadow: 0 0 15px #f39c12; transform: scale(1.1);}
+.btn.hard:hover { box-shadow: 0 0 15px #e74c3c; transform: scale(1.1);}
+.btn.restart:hover { box-shadow: 0 0 15px #3498db; transform: scale(1.1);}
 
 .easy { background:#27ae60; color:white; }
 .medium { background:#f39c12; color:white; }
@@ -73,7 +65,6 @@ h1{font-size:42px; margin-bottom:20px; letter-spacing:2px;}
   color:rgba(255,255,255,0.3);
   z-index:2; user-select:none;
 }
-
 #bgCanvas{position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;}
 #countdown{
   position:absolute; top:50%; left:50%;
@@ -82,12 +73,13 @@ h1{font-size:42px; margin-bottom:20px; letter-spacing:2px;}
   color:#f1c40f; z-index:4; pointer-events:none;
 }
 
+/* Mobil tasarım */
 @media (max-width:768px){
-  canvas#gameCanvas { width:95vw !important; height:90vh !important; }
-  .menu-content, .overlay-content { width:90%; padding:30px; font-size:20px; }
-  .btn { width:90%; padding:18px 0; font-size:22px; }
-  .score { top:25px; font-size:45px; }
-  #countdown { font-size:120px; }
+  canvas#gameCanvas{ width:95vw !important; height:95vh !important; }
+  .menu-content, .overlay-content{ width:90%; padding:30px; font-size:20px; }
+  .btn{ width:90%; padding:20px 0; font-size:24px; }
+  .score{ top:25px; font-size:50px; }
+  #countdown{ font-size:130px; }
 }
 </style>
 </head>
@@ -143,20 +135,21 @@ const scoreElement=document.getElementById("score"), startMenu=document.getEleme
 const gameOverMenu=document.getElementById("gameOverMenu"), finalScore=document.getElementById("finalScore");
 const countdownEl=document.getElementById("countdown");
 let paddleHeight=12,paddleWidth=100,paddleX,ballRadius=10;
-let x,y,dx,dy,score=0,isGameOver=false,difficultySpeed=2,particlesImpact=[];
+let x,y,dx,dy,score=0,isGameOver=false,particlesImpact=[],difficultySpeed=2;
 
 function resizeCanvas(){
   if(window.innerWidth<=768){
-    canvas.width=window.innerWidth*0.95;
-    canvas.height=window.innerHeight*0.9;
-    paddleWidth=180; paddleHeight=25; ballRadius=25;
-  }else{
-    canvas.width=800;
-    canvas.height=600;
-    paddleWidth=100; paddleHeight=12; ballRadius=10;
+    canvas.width = window.innerWidth*0.95;
+    canvas.height = window.innerHeight*0.95;
+    paddleWidth = 180; paddleHeight = 25; ballRadius = 25;
+  } else {
+    canvas.width = 800;
+    canvas.height = 600;
+    paddleWidth = 100; paddleHeight = 12; ballRadius = 10;
   }
-  paddleX=(canvas.width-paddleWidth)/2;
-  x=canvas.width/2; y=canvas.height-paddleHeight-50;
+  paddleX = (canvas.width - paddleWidth)/2;
+  x = canvas.width/2;
+  y = canvas.height - paddleHeight - 50;
 }
 window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
@@ -203,7 +196,8 @@ function drawBall(){
 function drawPaddle(){
   ctx.beginPath();
   ctx.rect(paddleX,canvas.height-paddleHeight-5,paddleWidth,paddleHeight);
-  ctx.fillStyle="#2ecc71"; ctx.shadowColor="#2ecc71"; ctx.shadowBlur=12; ctx.fill(); ctx.closePath();
+  ctx.fillStyle="#2ecc71"; ctx.shadowColor="#2ecc71"; ctx.shadowBlur=12;
+  ctx.fill(); ctx.closePath();
 }
 function addImpactParticles(x,y){
   for(let i=0;i<20;i++){
@@ -230,10 +224,8 @@ function draw(){
   if(x+dx>canvas.width-ballRadius||x+dx<ballRadius) dx=-dx;
   if(y+dy<ballRadius) dy=-dy;
   else if(y+dy>canvas.height-ballRadius){
-    if(x>paddleX&&x<paddleX+paddleWidth){
-      dy=-dy; score++; scoreElement.textContent=score;
-      addImpactParticles(x,y);
-    } else{gameOver(); return;}
+    if(x>paddleX&&x<paddleX+paddleWidth){ dy=-dy; score++; scoreElement.textContent=score; addImpactParticles(x,y);}
+    else{ gameOver(); return; }
   }
   x+=dx; y+=dy;
   requestAnimationFrame(draw);
