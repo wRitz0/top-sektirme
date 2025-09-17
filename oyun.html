@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Top Sektirme</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; outline:none; user-select:none; }
+body {
+  font-family:'Montserrat',sans-serif;
+  overflow:hidden;
+  height:100vh; width:100vw;
+  display:flex; justify-content:center; align-items:center;
+  background: radial-gradient(circle at center,#111 0%,#000 100%);
+  color:white; position:relative;
+}
+
+/* Canvas */
+canvas { 
+  background: rgba(255,255,255,0.02); 
+  border-radius:12px; 
+  box-shadow:0 0 25px rgba(0,0,0,0.8); 
+  z-index:2; 
+  display:block;
+}
+
+/* Menü */
+.menu, .overlay {
+  position:absolute; top:0; left:0;
+  width:100vw; height:100vh;
+  display:flex; justify-content:center; align-items:center;
+  background: rgba(0,0,0,0.85);
+  flex-direction:column; z-index:3;
+  animation:fadeInMenu 0.6s ease forwards;
+}
+.menu-content, .overlay-content {
+  background: rgba(20,20,20,0.95);
+  backdrop-filter: blur(8px);
+  padding:40px 60px;
+  border-radius:20px;
+  text-align:center;
+  animation:scaleMenu 0.5s ease forwards;
+  box-shadow:0 0 35px rgba(0,0,0,0.5);
+}
+h1 { font-size:48px; margin-bottom:20px; letter-spacing:2px; color:#fff; }
+
+/* Butonlar */
+.btn { 
+  margin:12px; padding:15px 35px; font-size:20px; 
+  border:none; border-radius:12px; cursor:pointer; font-weight:bold; 
+  transition: transform 0.2s, box-shadow 0.3s, background 0.3s; 
+  color:#fff;
+}
+.btn:hover { transform:scale(1.08); }
+
+.easy { background:#2ecc71; box-shadow:0 0 15px #2ecc71; }
+.easy:hover { box-shadow:0 0 25px #2ecc71; }
+
+.medium { background:#f1c40f; color:#000; box-shadow:0 0 15px #f1c40f; }
+.medium:hover { box-shadow:0 0 25px #f1c40f; }
+
+.hard { background:#e74c3c; box-shadow:0 0 15px #e74c3c; }
+.hard:hover { box-shadow:0 0 25px #e74c3c; }
+
+/* Animasyonlar */
+@keyframes fadeInMenu { from{opacity:0;} to{opacity:1;} }
+@keyframes scaleMenu { from{transform:scale(0.7);opacity:0;} to{transform:scale(1);opacity:1;} }
+@keyframes scaleFade { 0%{opacity:0; transform:translate(-50%, -50%) scale(0.5);} 50%{opacity:1; transform:translate(-50%, -50%) scale(1.3);} 100%{opacity:0; transform:translate(-50%, -50%) scale(1);} }
+
+/* Skor */
+.score {
+  position:absolute; top:25px; left:50%; transform:translateX(-50%);
+  font-size:48px; font-weight:700; color:rgba(255,255,255,0.3); z-index:2; user-select:none;
+}
+
+/* Arka plan parçacıkları */
+#bgCanvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+
+/* 3-2-1 sayım */
+#countdown {
+  position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+  font-size:120px; font-weight:700; color:#f1c40f;
+  text-shadow:0 0 30px rgba(255,215,0,0.8);
+  z-index:4; pointer-events:none; opacity:0; display:flex; justify-content:center; align-items:center;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="menu" id="startMenu">
+  <div class="menu-content">
+    <h1>Top Sektirme</h1>
+    <p style="margin-bottom:20px;">Zorluk seç ve oyuna başla</p>
+    <button class="btn easy" onclick="startGame('easy')">Kolay</button>
+    <button class="btn medium" onclick="startGame('medium')">Orta</button>
+    <button class="btn hard" onclick="startGame('hard')">Zor</button>
+  </div>
+</div>
+
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+<div class="score" id="score">0</div>
+
+<div class="overlay" id="gameOverMenu" style="display:none;">
+  <div class="overlay-content">
+    <h1>Kaybettin 😢</h1>
+    <p id="finalScore"></p>
+    <button class="btn restart" onclick="restartGame()">Yeniden Başla</button>
+  </div>
+</div>
+
+<div id="countdown">3</div>
+
+<script>
+/* ==== Arka Plan ==== */
+const bgCanvas=document.getElementById("bgCanvas");
+const bgCtx=bgCanvas.getContext("2d");
+bgCanvas.width=window.innerWidth;
+bgCanvas.height=window.innerHeight;
+let particles=[];
+for(let i=0;i<80;i++){
+  particles.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.5});
+}
+function drawParticles(){
+  bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+  bgCtx.fillStyle="rgba(255,255,255,0.3)";
+  particles.forEach(p=>{
+    bgCtx.beginPath();
+    bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgCtx.fill();
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>bgCanvas.width)p.dx*=-1;
+    if(p.y<0||p.y>bgCanvas.height)p.dy*=-1;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ==== Oyun ==== */
+const canvas=document.getElementById("gameCanvas");
+const ctx=canvas.getContext("2d");
+const scoreElement=document.getElementById("score");
+const startMenu=document.getElementById("startMenu");
+const gameOverMenu=document.getElementById("gameOverMenu");
+const finalScore=document.getElementById("finalScore");
+const countdownEl=document.getElementById("countdown");
+
+let paddleHeight=12,paddleWidth=100;
+let paddleX;
+let ballRadius=10;
+let x,y,dx,dy;
+let score=0;
+let isGameOver=false;
+let difficultySpeed=2;
+
+let particlesImpact=[];
+
+function startGame(difficulty){
+  if(difficulty==="easy")difficultySpeed=2;
+  else if(difficulty==="medium")difficultySpeed=3.5;
+  else if(difficulty==="hard")difficultySpeed=5;
+  startMenu.style.display="none";
+  showCountdown();
+}
+
+function showCountdown(){
+  let count=3;
+  countdownEl.style.opacity=1;
+  function step(){
+    if(count>0){
+      countdownEl.textContent=count;
+      countdownEl.style.animation='none';
+      void countdownEl.offsetWidth;
+      countdownEl.style.animation='scaleFade 1s ease forwards';
+      count--;
+      setTimeout(step,1000);
+    } else {
+      countdownEl.style.opacity=0;
+      initGame();
+    }
+  }
+  step();
+}
+
+function initGame(){
+  x=canvas.width/2;
+  y=canvas.height-40;
+  let angle=(Math.random()*Math.PI/3)+Math.PI/6;
+  dx=difficultySpeed*Math.cos(angle)*(Math.random()<0.5?-1:1);
+  dy=-difficultySpeed*Math.sin(angle);
+  paddleX=(canvas.width-paddleWidth)/2;
+  score=0;
+  isGameOver=false;
+  scoreElement.textContent="0";
+  gameOverMenu.style.display="none";
+  draw();
+}
+
+document.addEventListener("mousemove",(e)=>{
+  let relX=e.clientX-canvas.getBoundingClientRect().left;
+  if(relX>0&&relX<canvas.width)paddleX=relX-paddleWidth/2;
+});
+document.addEventListener("touchmove",(e)=>{
+  e.preventDefault();
+  let touchX=e.touches[0].clientX-canvas.getBoundingClientRect().left;
+  paddleX=touchX-paddleWidth/2;
+},{passive:false});
+
+function drawBall(){ctx.beginPath();ctx.arc(x,y,ballRadius,0,Math.PI*2);ctx.fillStyle="#f1c40f";ctx.fill();ctx.closePath();}
+
+function drawPaddle(){
+  ctx.save();
+  ctx.shadowColor="#2ecc71";
+  ctx.shadowBlur=15;
+  ctx.fillStyle="#2ecc71";
+  ctx.beginPath();
+  ctx.rect(paddleX,canvas.height-paddleHeight-5,paddleWidth,paddleHeight);
+  ctx.fill();
+  ctx.closePath();
+  ctx.restore();
+}
+
+/* Yeni yuvarlak patlama efekti */
+function addImpactParticles(x, y) {
+  for (let i = 0; i < 20; i++) { // parçacık sayısı artırıldı
+    let angle = Math.random() * Math.PI * 2;   // rastgele yön
+    let speed = Math.random() * 4 + 2;         // rastgele hız
+    particlesImpact.push({
+      x: x,
+      y: y,
+      dx: Math.cos(angle) * speed,
+      dy: Math.sin(angle) * speed,
+      r: Math.random() * 4 + 2,               // boyut biraz büyütüldü
+      alpha: 1
+    });
+  }
+}
+
+function drawImpactParticles() {
+  for (let i = particlesImpact.length - 1; i >= 0; i--) {
+    let p = particlesImpact[i];
+    let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+    gradient.addColorStop(0, `rgba(241,196,15,${p.alpha})`);
+    gradient.addColorStop(0.5, `rgba(241,196,15,${p.alpha * 0.5})`);
+    gradient.addColorStop(1, `rgba(241,196,15,0)`);
+    
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.closePath();
+    
+    p.x += p.dx;
+    p.y += p.dy;
+    p.alpha -= 0.03;
+    if (p.alpha <= 0) particlesImpact.splice(i, 1);
+  }
+}
+
+function draw(){
+  if(isGameOver)return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawBall(); drawPaddle(); drawImpactParticles();
+
+  if(x+dx>canvas.width-ballRadius||x+dx<ballRadius) dx*=-1;
+  if(y+dy<ballRadius) dy*=-1;
+  else if(y+dy>canvas.height-ballRadius){
+    if(x>paddleX && x<paddleX+paddleWidth){
+      dy*=-1;
+      score++;
+      scoreElement.textContent=score;
+      addImpactParticles(x,y);
+    } else { gameOver(); return; }
+  }
+
+  x+=dx; y+=dy;
+  requestAnimationFrame(draw);
+}
+
+function gameOver(){
+  isGameOver=true;
+  finalScore.textContent="Skorun: "+score;
+  gameOverMenu.style.display="flex";
+}
+
+function restartGame(){
+  startMenu.style.display="flex";
+  gameOverMenu.style.display="none";
+}
+</script>
+</body>
+</html>
