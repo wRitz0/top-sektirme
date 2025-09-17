@@ -83,6 +83,45 @@ h1 { font-size:48px; margin-bottom:20px; letter-spacing:2px; color:#fff; }
   text-shadow:0 0 30px rgba(255,215,0,0.8);
   z-index:4; pointer-events:none; opacity:0; display:flex; justify-content:center; align-items:center;
 }
+
+/* Responsive: mobil uyumluluk */
+@media (max-width: 768px) {
+  body, html {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  canvas#gameCanvas {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .menu, .overlay {
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+  }
+
+  .menu-content, .overlay-content {
+    width: 90%;
+    padding: 25px;
+    font-size: 18px;
+  }
+
+  .btn {
+    width: 80%;
+    padding: 14px 0;
+    font-size: 18px;
+  }
+
+  .score {
+    top: 15px;
+    font-size: 36px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -288,6 +327,8 @@ function restartGame(){
   startMenu.style.display="flex";
   gameOverMenu.style.display="none";
 }
+
+
 </script>
 </body>
 </html>
