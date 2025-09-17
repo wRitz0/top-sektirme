@@ -41,12 +41,23 @@ h1{font-size:42px; margin-bottom:20px; letter-spacing:2px;}
   margin:12px; padding:12px 28px; font-size:20px;
   border:none; border-radius:10px; cursor:pointer;
   font-family:'Montserrat',sans-serif; font-weight:bold;
-  transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+  transition: transform 0.2s, box-shadow 0.3s;
 }
-.btn:hover{
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(255,255,255,0.4);
+
+/* Menü buton hover glow renkleri */
+.btn.easy:hover { 
+  box-shadow: 0 0 15px #27ae60; transform: scale(1.1);
 }
+.btn.medium:hover { 
+  box-shadow: 0 0 15px #f39c12; transform: scale(1.1);
+}
+.btn.hard:hover { 
+  box-shadow: 0 0 15px #e74c3c; transform: scale(1.1);
+}
+.btn.restart:hover {
+  box-shadow: 0 0 15px #3498db; transform: scale(1.1);
+}
+
 .easy { background:#27ae60; color:white; }
 .medium { background:#f39c12; color:white; }
 .hard { background:#e74c3c; color:white; }
@@ -140,7 +151,8 @@ function resizeCanvas(){
     canvas.height=window.innerHeight*0.9;
     paddleWidth=180; paddleHeight=25; ballRadius=25;
   }else{
-    canvas.width=800; canvas.height=600;
+    canvas.width=800;
+    canvas.height=600;
     paddleWidth=100; paddleHeight=12; ballRadius=10;
   }
   paddleX=(canvas.width-paddleWidth)/2;
