@@ -152,16 +152,14 @@ function resizeCanvas(){
     canvas.height = window.innerHeight * 0.95;
     paddleWidth = 180;
     paddleHeight = 25;
-    ballRadius = 25;
+    ballRadius = 25; // Mobil top büyük
   } else {
-    // PC için dinamik ayar
-    canvas.width = Math.min(window.innerWidth * 0.9, 1000);
-    canvas.height = Math.min(window.innerHeight * 0.8, 700);
-
-    // Paddle ve top boyutu pencereye göre büyüyor
-    paddleWidth = canvas.width * 0.125; // canvas genişliğinin 12.5%
-    paddleHeight = canvas.height * 0.02;
-    ballRadius = canvas.height * 0.03;
+    // PC için ayar
+    canvas.width = 800;
+    canvas.height = 600;
+    paddleWidth = 100;
+    paddleHeight = 12;
+    ballRadius = 10; // PC top eski boyut
   }
 
   // Pozisyonları güncelle
@@ -171,7 +169,6 @@ function resizeCanvas(){
 }
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
-
 
 function startGame(difficulty){
   if(difficulty==='easy') difficultySpeed=2;
